@@ -26,6 +26,9 @@ app.get('/something', (req, res, next) => {
     res.send('Thank you for your request! This is our response for something endpoint.')
 })
 
+//változóba mentjük az elérhetőséget
+const userFile = path.join(`${__dirname}/../frontend/users.json`);
+
 app.get('/api/v1/users', (req, res, next) => {
     console.log('Request received for users endpoint.');
     /*
@@ -70,13 +73,10 @@ app.get('/api/v1/users/passive', (req, res, next) => {
             //const passiveUsers = users.filter(user => user.status === "passive");
             //res.send(passiveUsers);
             res.send(users.filter(user => user.status === "passive"));
+            //egyesével megyünk végig a usereken a filterben, ezért egyesszámban írjuk a filteren belül)
         }
     })
 })
-
-
-
-
 
 //minden request beérkezett ide a terminálba
 
