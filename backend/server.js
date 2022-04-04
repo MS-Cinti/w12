@@ -7,7 +7,7 @@ const path = require('path');
 const port = 9000;
 const app = express();
 
-//next: ha itt végzett akkor hajtson e végre műveletet vagy sem
+//next: ha itt végzett akkor hajtson e végre műveletet vagy sem, átpasszolja a következőhöz
 app.get('/', (req, res, next) => { 
     //console.log('Request received.');
     //res.send('Thank you for your request! This is our response.')
@@ -46,6 +46,37 @@ app.get('/api/v1/users', (req, res, next) => {
    //a fenti users objectet belementettük egy users.json fileba és most elérhetővé tesszük a frontendnek
     res.sendFile(path.join(`${__dirname}/../frontend/users.json`)); 
 })
+
+app.get('/api/v1/users/active', (req, res, next) => {
+    //fs.readFile-nál error és data van mindig
+    fs.readFile('../frontend/users.json', (error, data) => {
+        if(error) {
+            res.send("Error happened.")
+        }else{
+            const users = JSON.parse(data)
+            //const activeUsers = users.filter(user => user.status === "active");
+            //res.send(activeUsers);
+            res.send(users.filter(user => user.status === "active"));
+        }
+    })
+})
+
+app.get('/api/v1/users/passive', (req, res, next) => {
+    fs.readFile('../frontend/users.json', (error, data) => {
+        if(error) {
+            res.send("Error happened.")
+        }else{
+            const users = JSON.parse(data)
+            //const passiveUsers = users.filter(user => user.status === "passive");
+            //res.send(passiveUsers);
+            res.send(users.filter(user => user.status === "passive"));
+        }
+    })
+})
+
+
+
+
 
 //minden request beérkezett ide a terminálba
 
