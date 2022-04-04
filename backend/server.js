@@ -28,13 +28,23 @@ app.get('/something', (req, res, next) => {
 
 app.get('/api/v1/users', (req, res, next) => {
     console.log('Request received for users endpoint.');
+    /*
     const users = [
         {
             name: 'John',
-            surname: "Doe"
+            surname: "Doe",
+            status: 'active',
+        },
+        {
+            name: 'Cinti',
+            surname: "Murai-Szabadi",
+            status: 'passive',
         }
     ]
     res.send(JSON.stringify(users)) //a users változót stringként visszaküldjük a frontendnek
+    */
+   //a fenti users objectet belementettük egy users.json fileba és most elérhetővé tesszük a frontendnek
+    res.sendFile(path.join(`${__dirname}/../frontend/users.json`)); 
 })
 
 //minden request beérkezett ide a terminálba
