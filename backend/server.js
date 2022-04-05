@@ -9,11 +9,11 @@ const app = express();
 
 app.use(express.json()); //ezt mindig a const app alá kell írni!, a megfelelő esetekben json-ná alakítja
 
-//frontendFolder változóba mentve az elérése 
+//frontendFolder változóba mentve az elérése a frontendnek
 const fFolder = `${__dirname}/../frontend`;
 
 
-//next: ha itt végzett akkor hajtson e végre műveletet vagy sem, átpasszolja a következőhöz
+//next: ha itt végzett akkor hajtson e végre műveletet vagy sem, átpasszolja a következőhöz gethez
 app.get('/', (req, res, next) => { 
     //console.log('Request received.');
     //res.send('Thank you for your request! This is our response.')
@@ -44,12 +44,12 @@ app.get('/api/v1/users', (req, res, next) => {
     /*
     const users = [
         {
-            name: 'John',
+            firstName: 'John',
             surname: "Doe",
             status: 'active',
         },
         {
-            name: 'Cinti',
+            firstName: 'Cinti',
             surname: "Murai-Szabadi",
             status: 'passive',
         }
