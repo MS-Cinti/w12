@@ -60,7 +60,6 @@ const loadEvent = async () => {
             body: JSON.stringify(userData)
         })
         .then(async data => {
-            //ha itt ezt kikommentezzük, akkor nem ír errort a böngésző console oldalon
             const user = await data.json();
             rootElement.insertAdjacentHTML("beforeend", userComponent(user));
         })
