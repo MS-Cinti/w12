@@ -156,6 +156,7 @@ app.post("/users/new", (req, res) => {
 //listen elé kell ezt tenni, hogy ne akadjon össze
 app.use('/pub', express.static(`${fFolder}/../frontend/public`));
 
+//fent csináltunk egy port változót
 app.listen(port, () => {
     console.log(`http://127.0.0.1:${port}`)
 })
