@@ -33,10 +33,11 @@ const loadEvent = async () => {
     }
 
     const result = await parseJSON('/api/v1/users');
+    
     const rootElement = document.getElementById("root");
     rootElement.insertAdjacentHTML(
         "beforeend", 
-        result.map(user => userComponent(user)).join("")
+        result.map(user => userComponent(user)).join("") //a map egy tömböt ad vissza és azt a joinoljuk stringgé 
     );
 
     rootElement.insertAdjacentHTML("afterend", addUserComponent());

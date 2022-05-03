@@ -1,7 +1,7 @@
 //cd backend -> npm init -y -> npm install express
 
 const express = require('express');
-const fs = require ('fs');
+const fs = require ('fs'); 
 const path = require('path');
 
 const port = 9000;
@@ -115,7 +115,7 @@ app.get('/api/v1/users/passive', (req, res, next) => {
 app.get('/api/v1/users-params/:key', (req, res, next) => {
     console.dir(req.params) //clg.dir kulcsértékpároknál
     console.log(req.params.key)
-    fs.readFile(userFile, (error, data) => {  //userFile változó elérési útvonal
+    fs.readFile(userFile, (error, data) => {  //userFile változó elérési útvonal és callback fc kell a readFilenak 
         const users = JSON.parse(data) //innen elérhető mindegyik if számára a users változó
         if(req.params.key === 'active'){
             const activeUsers = users.filter(user => user.status === "active");
@@ -131,12 +131,13 @@ app.get('/api/v1/users-params/:key', (req, res, next) => {
 
 //adat hozzáadása json filehoz:
 app.post("/users/new", (req, res) => {
-    fs.readFile(`${fFolder}/users.json`, (error, data) => {
+    fs.readFile(`${fFolder}/users.json`, (error, data) => { 
+        //beolvassuk a readFilelal, az error kiírja a hibát, a data visszaadja az adatot a fileban 
         if(error){
             console.log(error);
             res.send("Error reading users file.")
         }else{
-            const users = JSON.parse(data)
+            const users = JSON.parse(data) //stringként kapjuk az adatokat, ezeket js objektummá kell parsolni
             console.log(req.body);
             users.push(req.body);
 
