@@ -5,15 +5,15 @@ const fs = require ('fs');
 const path = require('path');
 
 const port = 9000;
-const app = express();
+const app = express(); //ez mindig ide fentre kell
 
-app.use(express.json()); //ezt mindig a const app alá kell írni!, a megfelelő esetekben json-ná alakítja
+app.use(express.json()); //ezt mindig a const app alá kell írni!, a megfelelő esetekben json-ná alakítja a req.body-ját és hozzácsatolja a req-hez, a benne található kulcsérték párok, amiket elküld a frontend, elérhetővé válnak számunkra
 
 //frontendFolder változóba mentve az elérése a frontendnek
 const fFolder = `${__dirname}/../frontend`;
 
 
-//next: ha itt végzett akkor hajtson e végre műveletet vagy sem, átpasszolja a következőhöz gethez
+//next: ha itt végzett akkor hajtson e végre műveletet vagy sem, átpasszolja a következő gethez
 app.get('/', (req, res, next) => { 
     //console.log('Request received.');
     //res.send('Thank you for your request! This is our response.')
@@ -37,6 +37,8 @@ app.get('/something', (req, res, next) => {
 })
 
 //változóba mentjük az elérhetőséget
+//ha belépek a backendbe és onnan indítom el a szervert, akkor onnantól nézi a relatív eléréseket
+//dirname egy globális változó, ez mutat a backend mappára
 const userFile = path.join(`${__dirname}/../frontend/users.json`);
 
 app.get('/api/v1/users', (req, res, next) => {
@@ -60,7 +62,8 @@ app.get('/api/v1/users', (req, res, next) => {
     res.sendFile(path.join(`${__dirname}/../frontend/users.json`)); 
 })
 
-app.get('/api/v1/users-query', (req, res, next) => {
+app.get('/api/v1/users-query', (req, res, next) => { //sok azonosítást tudunk ezzel csinálni, kérdőjeles verzió, webes standard 
+    //pl http://127.0.0.1:9000/api/v1/users-query?apiKey=apple, mit szolgáljunk ki ezen a címen?!
     console.dir(req.query) //clg.dir kulcsértékpároknál
     console.log(req.query.apiKey)
     if (req.query.apiKey === 'apple'){
@@ -112,7 +115,8 @@ app.get('/api/v1/users/passive', (req, res, next) => {
 */
 
 //active és passive paramsra átalakítva egy get requestbe:
-app.get('/api/v1/users-params/:key', (req, res, next) => {
+app.get('/api/v1/users-params/:key', (req, res, next) => { //express képes erre, hogy változóként kezelje az url : utáni részét
+    //pl http://127.0.0.1:9000/api/v1/users-params/active
     console.dir(req.params) //clg.dir kulcsértékpároknál
     console.log(req.params.key)
     fs.readFile(userFile, (error, data) => {  //userFile változó elérési útvonal és callback fc kell a readFilenak 
@@ -130,24 +134,28 @@ app.get('/api/v1/users-params/:key', (req, res, next) => {
 })
 
 //adat hozzáadása json filehoz:
-app.post("/users/new", (req, res) => {
+app.post("/users/new", (req, res) => { //request = kérés, response = válasz
+    //1.arg: json file elérés, 2.arg: callback fc: mit kapunk vissza a beolvasáskor, és hiba esetén mi legyen
     fs.readFile(`${fFolder}/users.json`, (error, data) => { 
-        //beolvassuk a readFilelal, az error kiírja a hibát, a data visszaadja az adatot a fileban 
+        //beolvassuk a readFilelal a users.json-t, az error kiírja a hibát, a data visszaadja az adatot a fileban 
         if(error){
             console.log(error);
             res.send("Error reading users file.")
         }else{
-            const users = JSON.parse(data) //stringként kapjuk az adatokat, ezeket js objektummá kell parsolni
+            //felprocesszáljuk jsonba a datát a parse-al, stringként kapjuk az adatokat, ezeket js objektummá kell parsolni
+            const users = JSON.parse(data) 
             console.log(req.body);
-            users.push(req.body);
+            users.push(req.body); //a usert pusholom bele a users változóba
 
-            fs.writeFile(`${fFolder}/users.json`, JSON.stringify(users), error => {
+            //újra stringgé kell alakítanunk az adatot, hogy a file-ba bele tudjuk írni
+            //1.arg: elérés, 2.arg: mit írjunk bele, 3.arg: callback fc, amiben az errort akarjuk újra 
+            fs.writeFile(`${fFolder}/users.json`, JSON.stringify(users), error => { 
                 if(error){
                     console.log(error);
                     res.send("Error writing users file.")
                 }
             })
-            res.send(req.body);
+            res.send(req.body); //writefile-on kívülre kell ez! ha nincs hiba, akkor visszaküldjük a req.body-t
         }
     })
 })
