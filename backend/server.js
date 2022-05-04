@@ -145,7 +145,7 @@ app.post("/users/new", (req, res) => { //request = kérés, response = válasz
             //felprocesszáljuk jsonba a datát a parse-al, stringként kapjuk az adatokat, ezeket js objektummá kell parsolni
             const users = JSON.parse(data) 
             console.log(req.body);
-            users.push(req.body); //a usert pusholom bele a users változóba
+            users.push(req.body); //a usert pusholom bele a users változóba, itt updatelem
 
             //újra stringgé kell alakítanunk az adatot, hogy a file-ba bele tudjuk írni
             //1.arg: elérés, 2.arg: mit írjunk bele, 3.arg: callback fc, amiben az errort akarjuk újra 
